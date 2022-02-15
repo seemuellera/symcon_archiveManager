@@ -300,7 +300,7 @@ class ArchiveManager extends IPSModule {
 		
 		foreach ($allVariableIdents as $currentIdent) {
 			
-			$allVariablesForCurrentIdent = $this->getArchiveDefinitionForIdent($currentIdent);
+			$allVariablesForCurrentIdent = $this->getManagedVariables($currentIdent);
 			$variableCount += count($allVariablesForCurrentIdent);
 		}
 		
