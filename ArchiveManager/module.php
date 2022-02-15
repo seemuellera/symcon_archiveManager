@@ -31,6 +31,7 @@ class ArchiveManager extends IPSModule {
 		$this->RegisterVariableInteger("ManagedDeviceCount","Number of Managed Device Instances");
 		$this->RegisterVariableInteger("ManagedVariableCount","Number of Managed Variables");
 		$this->RegisterVariableInteger("CompliantVariableCount","Number of Compliant Variables");
+		$this->RegisterVariableInteger("RemediationVariableCount","Number of last remediations");
 		
 		// Default Actions
 		$this->EnableAction("Status");
@@ -405,6 +406,8 @@ class ArchiveManager extends IPSModule {
 	
 	public function Remediate() {
 		
+		$remediationCount = 0;
+		
 		$allVariableIdents = $this->getArchiveDefinitionIdents();
 		
 		if (! $allVariableIdents) {
@@ -423,6 +426,7 @@ class ArchiveManager extends IPSModule {
 				if (! $this->compareArchiveSettings($archiveDefinition, $archiveSettings) ) {
 					
 					$this->RemediateVariable($archiveDefinition, $archiveSettings, $currentVariable);
+					$remediationCount++;
 				}
 				else {
 					
@@ -431,7 +435,8 @@ class ArchiveManager extends IPSModule {
 			}
 		}
 		
-		return true;
+		SetValue($this->GetIDForIdent("RemediationVariableCount"), $remediationCount);
+		return $remediationCount;
 	}
 	
 	protected function RemediateVariable($archiveDefinition, $archiveSettings, $variableId) {
