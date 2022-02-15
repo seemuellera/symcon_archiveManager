@@ -248,6 +248,8 @@ class ArchiveManager extends IPSModule {
 				$allManagedVariables[] = $variableDetails;
 			}
 		}
+		
+		return $allManagedVariables;
 	}
 	
 	protected function getArchiveDefinition() {
