@@ -83,6 +83,7 @@ class ArchiveManager extends IPSModule {
 											"name" => "ModuleGUID", 
 											"caption" => "Device Module",
 											"options" => $this->getModuleList()
+										)
 									)
 								);
 		
@@ -152,9 +153,7 @@ class ArchiveManager extends IPSModule {
 		
 		$moduleNames = array_column($allModules, 'caption');
 		array_multisort($moduleNames, SORT_ASC, $allModules);
-		
-		print_r($allModules);
-		
+
 		return $allModules;
 	}
 }
