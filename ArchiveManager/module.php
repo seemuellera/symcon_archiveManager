@@ -124,7 +124,7 @@ class ArchiveManager extends IPSModule {
 				"name" => "IgnoreNull",
 				"width" => "150px",
 				"edit" => Array("type" => "CheckBox"),
-				"add" => ""
+				"add" => false
 			)
 		);
 		$form['elements'][] = Array(
@@ -399,7 +399,6 @@ class ArchiveManager extends IPSModule {
 		
 		if (count($result) != 0) {
 			
-			var_dump($result);
 			return false;
 		}
 		
