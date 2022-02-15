@@ -186,6 +186,11 @@ class ArchiveManager extends IPSModule {
 		
 			case "Status":
 				SetValue($this->GetIDForIdent($Ident), $Value);
+				// Initialize an immediate refresh if turned on
+				if ($Value) {
+					
+					$this->RefreshInformation();
+				}
 				break;
 			default:
 				throw new Exception("Invalid Ident");
