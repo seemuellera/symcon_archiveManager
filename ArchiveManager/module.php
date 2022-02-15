@@ -159,7 +159,7 @@ class ArchiveManager extends IPSModule {
 			return;
 		}
 		
-		$this->LogMessage("Refresh in Progress", "KL_DEBUG");
+		$this->LogMessage("Refresh in Progress", KL_DEBUG);
 		
 		SetValue($this->GetIDForIdent("ManagedDeviceCount"), count($this->getDeviceInstances()));
 		SetValue($this->GetIDForIdent("ManagedVariableCount"), $this->countManagedVariables());
@@ -186,7 +186,7 @@ class ArchiveManager extends IPSModule {
 	
 	public function MessageSink($TimeStamp, $SenderId, $Message, $Data) {
 	
-		$this->LogMessage("$TimeStamp - $SenderId - $Message - " . implode(";",$Data), "KL_DEBUG");
+		$this->LogMessage("$TimeStamp - $SenderId - $Message - " . implode(";",$Data), KL_DEBUG);
 	}
 
 	protected function getModuleList() {
@@ -370,7 +370,7 @@ class ArchiveManager extends IPSModule {
 				}
 				else {
 					
-					$this->LogMessage("Variable $currentVariable is not compliant", "KL_DEBUG");
+					$this->LogMessage("Variable $currentVariable is not compliant", KL_DEBUG);
 				}
 			}
 		}
@@ -384,7 +384,7 @@ class ArchiveManager extends IPSModule {
 		
 		if (count($result) != 0) {
 			
-			$this->LogMessage("The archvie definition and settings are different for this variable","KL_DEBUG");
+			$this->LogMessage("The archvie definition and settings are different for this variable",KL_DEBUG);
 			return false;
 		}
 		
@@ -414,7 +414,7 @@ class ArchiveManager extends IPSModule {
 				}
 				else {
 					
-					$this->LogMessage("Variable $currentVariable is compliant", "KL_DEBUG");
+					$this->LogMessage("Variable $currentVariable is compliant", KL_DEBUG);
 				}
 			}
 		}
