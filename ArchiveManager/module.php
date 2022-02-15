@@ -255,8 +255,6 @@ class ArchiveManager extends IPSModule {
 		$configurationJson = $this->ReadPropertyString("VariableList");
 		$configuration = json_decode($configurationJson, true);
 		
-		var_dump($configuration);
-		
 		return $configuration;
 	}
 	
@@ -285,6 +283,8 @@ class ArchiveManager extends IPSModule {
 			
 			$allIdents[] = $currentDefinition['VariableIdent'];
 		}
+		
+		return $allIdents;
 	}
 	
 	protected function countManagedVariables() {
