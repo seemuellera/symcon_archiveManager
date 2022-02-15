@@ -228,7 +228,7 @@ class ArchiveManager extends IPSModule {
 		
 		foreach ($allDeviceInstances as $currentDevice) {
 			
-			$variableId = IPS_GetObjectIDByIdent($Ident, $currentDevice);
+			$variableId = @IPS_GetObjectIDByIdent($Ident, $currentDevice);
 			
 			if ($variableId) {
 				
