@@ -38,6 +38,7 @@ class ArchiveManager extends IPSModule {
 		
 		// Timer
 		$this->RegisterTimer("RefreshInformation", 0 , 'ARCHIVEMGR_RefreshInformation($_IPS[\'TARGET\']);');
+		$this->RegisterTimer("Remediate", 0 , 'ARCHIVEMGR_Remediate($_IPS[\'TARGET\']);');
 
     }
 
@@ -54,7 +55,7 @@ class ArchiveManager extends IPSModule {
 		$this->SetTimerInterval("RefreshInformation", $newInterval);
 		
 		$newRemediationInterval = $this->ReadPropertyInteger("RemediationInterval") * 1000;
-		$this->SetTimerInterval("RemediationInterval", $newRemediationInterval);
+		$this->SetTimerInterval("Remediate", $newRemediationInterval);
 		
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
