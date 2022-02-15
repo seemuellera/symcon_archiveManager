@@ -24,6 +24,7 @@ class ArchiveManager extends IPSModule {
 		$this->RegisterPropertyBoolean("DebugOutput",false);
 		$this->RegisterPropertyInteger("ArchiveId",0);
 		$this->RegisterPropertyString("ModuleGUID","");
+		$this->RegisterPropertyString("VariableList","");
 		
 		// Variables
 		$this->RegisterVariableBoolean("Status","Status","~Switch");
@@ -86,6 +87,53 @@ class ArchiveManager extends IPSModule {
 										)
 									)
 								);
+								
+		$variableListColumns = Array(
+			Array(
+				"caption" => "Variable Ident",
+				"name" => "VariableIdent",
+				"width" => "200px",
+				"edit" => Array("type" => "ValidationTextBox"),
+				"add" => "unnamed"
+			),
+			Array(
+				"caption" => "Display in Webfront",
+				"name" => "DisplayWF",
+				"width" => "100px",
+				"edit" => Array("type" => "CheckBox"),
+				"add" => true
+			),
+			Array(
+				"caption" => "Aggregation Type",
+				"name" => "AggregationType",
+				"width" => "150px",
+				"edit" => Array(
+					"type" => "Select",
+					"options" => Array(
+						Array('caption' => 'Standard', 'value' => 'Standard'),
+						Array('caption' => 'Counter', 'value' => 'Counter'),
+					)
+				),
+				"add" => "Standard"
+			),
+			Array(
+				"caption" => "Ignore null and negative values",
+				"name" => "IgnoreNull",
+				"width" => "150px",
+				"edit" => Array("type" => "CheckBox"),
+				"add" => ""
+			)
+		);
+		$form['elements'][] = Array(
+			"type" => "List", 
+			"columns" => $variableListColumns, 
+			"name" => "VariableList", 
+			"caption" => "Variables to be managed", 
+			"add" => true, 
+			"delete" => true,
+			"rowCount" => 10
+		);
+		
 		
 		// Add the buttons for the test center
 		$form['actions'][] = Array(	"type" => "Button", "label" => "Refresh", "onClick" => 'ARCHIVEMGR_RefreshInformation($id);');
