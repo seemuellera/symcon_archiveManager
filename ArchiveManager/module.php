@@ -147,9 +147,18 @@ class ArchiveManager extends IPSModule {
 		foreach ($allModuleGUIDs as $currentGUID) {
 			
 			$moduleDetails = IPS_GetModule($currentGUID);
-			$allModules[] = Array('caption' => $moduleDetails['ModuleName'], 'value' => $currentGUID);
+			$allModules[$moduleDetails['ModuleName']] = $currentGUID;
+		}
+		
+		ksort($allModules);
+		
+		$allModulesSorted = Array();
+		
+		foreach ($allModules as $moduleName => $moduleGUID) {
+			
+			$allModulesSorted[] = Array('caption' => $moduleName, 'value' => $moduleGUID);	
 		}
 
-		return $allModules;
+		return $allModulesSorted;
 	}
 }
