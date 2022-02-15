@@ -348,6 +348,13 @@ class ArchiveManager extends IPSModule {
 	
 	public function CheckCompliance() {
 		
+		// Do nothing if status is off
+		if (! GetValue($this->GetIDForIdent("Status"))) {
+			
+			return;
+		}
+		
+		
 		$variableCount = 0;
 		
 		$allVariableIdents = $this->getArchiveDefinitionIdents();
