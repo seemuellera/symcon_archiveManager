@@ -260,7 +260,7 @@ class ArchiveManager extends IPSModule {
 		
 		return $configuration;
 	}
-	
+					   
 	protected function getArchiveDefinitionForIdent($Ident) {
 		
 		$variableDefinitions = $this->getArchiveDefinition();
@@ -281,6 +281,8 @@ class ArchiveManager extends IPSModule {
 					$archiveDefinition['aggregationType'] = 1;	
 				}
 				$archiveDefinition['ignoreNull'] = $currentDefinition['IgnoreNull'];
+				
+				return $archiveDefinition;
 			}
 		}
 		
