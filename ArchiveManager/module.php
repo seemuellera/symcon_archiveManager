@@ -21,7 +21,6 @@ class ArchiveManager extends IPSModule {
 		// Properties
 		$this->RegisterPropertyString("Sender","ArchiveManager");
 		$this->RegisterPropertyInteger("RefreshInterval",0);
-		$this->RegisterPropertyBoolean("DebugOutput",false);
 		$this->RegisterPropertyInteger("ArchiveId",0);
 		$this->RegisterPropertyString("ModuleGUID","");
 		$this->RegisterPropertyString("VariableList","");
@@ -76,8 +75,7 @@ class ArchiveManager extends IPSModule {
 								"caption" => "General Settings",
 								"expanded" => true,
 								"items" => Array(
-										Array("type" => "NumberSpinner", "name" => "RefreshInterval", "caption" => "Refresh Interval"),
-										Array("type" => "CheckBox", "name" => "DebugOutput", "caption" => "Enable Debug Output")									
+										Array("type" => "NumberSpinner", "name" => "RefreshInterval", "caption" => "Refresh Interval")
 									)
 								);
 								
@@ -153,25 +151,6 @@ class ArchiveManager extends IPSModule {
 
 	}
 	
-	// Version 1.1
-	protected function LogMessage($message, $severity = 'INFO') {
-		
-		$logMappings = Array();
-		$logMappings['DEBUG'] 	= 10206; 
-		$logMappings['INFO']	= 10201;
-		$logMappings['NOTIFY']	= 10203;
-		$logMappings['WARN'] 	= 10204;
-		$logMappings['CRIT']	= 10205;
-		
-		if ( ($severity == 'DEBUG') && ($this->ReadPropertyBoolean('DebugOutput') == true )) {
-			
-			$logMappings['DEBUG'] 	= 10201;
-		}
-		
-		$messageComplete = $severity . " - " . $message;
-		parent::LogMessage($messageComplete, $logMappings[$severity]);
-	}
-
 	public function RefreshInformation() {
 
 		// Do nothing if status is off
@@ -180,7 +159,7 @@ class ArchiveManager extends IPSModule {
 			return;
 		}
 		
-		$this->LogMessage("Refresh in Progress", "DEBUG");
+		$this->LogMessage("Refresh in Progress", "KL_DEBUG");
 		
 		SetValue($this->GetIDForIdent("ManagedDeviceCount"), count($this->getDeviceInstances()));
 		SetValue($this->GetIDForIdent("ManagedVariableCount"), $this->countManagedVariables());
@@ -207,7 +186,7 @@ class ArchiveManager extends IPSModule {
 	
 	public function MessageSink($TimeStamp, $SenderId, $Message, $Data) {
 	
-		$this->LogMessage("$TimeStamp - $SenderId - $Message - " . implode(";",$Data), "DEBUG");
+		$this->LogMessage("$TimeStamp - $SenderId - $Message - " . implode(";",$Data), "KL_DEBUG");
 	}
 
 	protected function getModuleList() {
@@ -391,7 +370,7 @@ class ArchiveManager extends IPSModule {
 				}
 				else {
 					
-					$this->LogMessage("Variable $currentVariable is not compliant", "DEBUG");
+					$this->LogMessage("Variable $currentVariable is not compliant", "KL_DEBUG");
 				}
 			}
 		}
@@ -405,6 +384,7 @@ class ArchiveManager extends IPSModule {
 		
 		if (count($result) != 0) {
 			
+			$this->LogMessage("The archvie definition and settings are different for this variable","KL_DEBUG");
 			return false;
 		}
 		
@@ -434,7 +414,7 @@ class ArchiveManager extends IPSModule {
 				}
 				else {
 					
-					$this->LogMessage("Variable $currentVariable is compliant", "DEBUG");
+					$this->LogMessage("Variable $currentVariable is compliant", "KL_DEBUG");
 				}
 			}
 		}
