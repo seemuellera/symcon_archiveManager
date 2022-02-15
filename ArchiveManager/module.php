@@ -150,9 +150,6 @@ class ArchiveManager extends IPSModule {
 			$allModules[]['caption'] = $moduleDetails['ModuleName'];
 			$allModules[]['value'] = $currentGUID;
 		}
-		
-		$moduleNames = array_column($allModules, 'caption');
-		array_multisort($moduleNames, SORT_ASC, $allModules);
 
 		return $allModules;
 	}
