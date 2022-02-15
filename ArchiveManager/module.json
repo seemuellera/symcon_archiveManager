@@ -1,0 +1,14 @@
+{
+  "id": "{561633E4-241C-4FCA-A19B-2AA9CE929139}",
+  "name": "ArchiveManager",
+  "type": 3,
+  "vendor": "Andreas Seemueller",
+  "aliases": 
+  [
+	  "ArchiveManager"
+  ],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "ARCHIVEMGR"
+}
