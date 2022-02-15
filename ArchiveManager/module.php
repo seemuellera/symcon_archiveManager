@@ -176,7 +176,7 @@ class ArchiveManager extends IPSModule {
 		$this->LogMessage("Refresh in Progress", "DEBUG");
 		
 		SetValue($this->GetIDForIdent("ManagedDeviceCount"), count($this->getDeviceInstances()));
-
+		SetValue($this->GetIDForIdent("ManagedVariableCount"), $this->countManagedVariables());
 	}
 
 	public function RequestAction($Ident, $Value) {
@@ -231,5 +231,72 @@ class ArchiveManager extends IPSModule {
 		$allDeviceInstances = IPS_GetInstanceListByModuleID($this->ReadPropertyString("ModuleGUID"));
 		
 		return $allDeviceInstances;
+	}
+	
+	protected function getManagedVariables($Ident) {
+		
+		$allDeviceInstances = $this->getDeviceInstances();
+		$allManagedVariables = Array();
+		
+		foreach ($allDeviceInstances as $currentDevice) {
+			
+			$variableId = IPS_GetObjectIDByIdent($Ident, $currentDevice);
+			
+			if ($variableId) {
+				
+				$variableDetails = IPS_GetVariable($variableId);
+				$allManagedVariables[] = $variableDetails;
+			}
+		}
+	}
+	
+	protected function getArchiveDefinition() {
+		
+		$configurationJson = $this->ReadPropertyString("VariableList");
+		$configuration = json_decode($configurationJson, true);
+		
+		return $configuration;
+	}
+	
+	protected function getArchiveDefinitionForIdent($Ident) {
+		
+		$variableDefinitions = $this->getArchiveDefinition();
+		
+		foreach ($variableDefinitions as $currentDefinition) {
+			
+			if ($currentDefinition['VariableIdent'] == $Ident) {
+				
+				return $currentDefinition;
+			}
+		}
+		
+		// No ident found, returning false
+		return false;
+	}
+	
+	protected function getArchiveDefinitionIdents() {
+		
+		$variableDefinitions = $this->getArchiveDefinition();
+		$allIdents = Array();
+		
+		foreach ($variableDefinitions as $currentDefinition) {
+			
+			$allIdents[] = $currentDefinition['VariableIdent'];
+		}
+	}
+	
+	protected function countManagedVariables() {
+		
+		$variableCount = 0;
+		
+		$allVariableIdents = $this->getArchiveDefinitionIdents();
+		
+		foreach ($allVariableIdents as $currentIdent) {
+			
+			$allVariablesForCurrentIdent = $this->getArchiveDefinitionForIdent($currentIdent);
+			$variableCount += count($allVariablesForCurrentIdent);
+		}
+		
+		return $variableCount;
 	}
 }
