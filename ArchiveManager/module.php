@@ -140,6 +140,7 @@ class ArchiveManager extends IPSModule {
 		
 		// Add the buttons for the test center
 		$form['actions'][] = Array(	"type" => "Button", "label" => "Refresh", "onClick" => 'ARCHIVEMGR_RefreshInformation($id);');
+		$form['actions'][] = Array(	"type" => "Button", "label" => "Remediate", "onClick" => 'ARCHIVEMGR_Remediate($id);');
 		
 		// Return the completed form
 		return json_encode($form);
@@ -403,5 +404,71 @@ class ArchiveManager extends IPSModule {
 		}
 		
 		return true;
+	}
+	
+	public function Remediate() {
+		
+		$allVariableIdents = $this->getArchiveDefinitionIdents();
+		
+		if (! $allVariableIdents) {
+			
+			return false;
+		}
+		
+		foreach ($allVariableIdents as $currentIdent) {
+			
+			$archiveDefinition = $this->getArchiveDefinitionForIdent($currentIdent);
+			$allVariablesForCurrentIdent = $this->getManagedVariables($currentIdent);
+			
+			foreach ($allVariablesForCurrentIdent as $currentVariable) {
+				
+				$archiveSettings = $this->getVariableArchiveSettings($currentVariable);
+				if (! $this->compareArchiveSettings($archiveDefinition, $archiveSettings) ) {
+					
+					$this->RemediateVariable($archiveDefinition, $archiveSettings, $currentVariable);
+				}
+				else {
+					
+					$this->LogMessage("Variable $currentVariable is compliant", "DEBUG");
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	protected function RemediateVariable($archiveDefinition, $archiveSettings, $variableId) {
+		
+		if ($archiveDefinition['status'] != $archiveSettings['status']) {
+			
+			AC_SetLoggingStatus($this->ReadPropertyInteger("ArchiveId"), $variableId, $archiveDefinition['status']);
+			
+			if (! $archiveDefinition['status']) {
+				
+				// return immediately as archiving was turned off, no other settings make sense
+				return;
+			}
+		}
+		
+		if ($archiveDefinition['visibleWF'] != $archiveSettings['visibleWF']) {
+			
+			AC_SetGraphStatus($this->ReadPropertyInteger("ArchiveId"), $variableId, $archiveDefinition['visibleWF']);
+		}
+		
+		if ($archiveDefinition['aggregationType'] != $archiveSettings['aggregationType']) {
+			
+			AC_SetAggregationType($this->ReadPropertyInteger("ArchiveId"), $variableId, $archiveDefinition['aggregationType']);
+		}
+		
+		// This settings only needs to be checked if the aggregation type is counter
+		if ($archiveDefinition['aggregationType'] == 1) {
+			
+			if ($archiveDefinition['ignoreNull'] != $archiveSettings['ignoreNull']) {
+			
+				AC_SetCounterIgnoreZeros ($this->ReadPropertyInteger("ArchiveId"), $variableId, $archiveDefinition['ignoreNull']);
+			}
+		}
+		
+		return;
 	}
 }
