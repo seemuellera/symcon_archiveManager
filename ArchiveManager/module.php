@@ -28,6 +28,8 @@ class ArchiveManager extends IPSModule {
 		
 		// Variables
 		$this->RegisterVariableBoolean("Status","Status","~Switch");
+		$this->RegisterVariableInteger("ManagedDeviceCount","Number of Managed Device Instances");
+		$this->RegisterVariableInteger("ManagedVariableCount","Number of Managed Variables");
 		
 		// Default Actions
 		$this->EnableAction("Status");
@@ -165,7 +167,16 @@ class ArchiveManager extends IPSModule {
 
 	public function RefreshInformation() {
 
+		// Do nothing if status is off
+		if (! GetValue($this->GetIDForIdent("Status"))) {
+			
+			return;
+		}
+		
 		$this->LogMessage("Refresh in Progress", "DEBUG");
+		
+		SetValue($this->GetIDForIdent("ManagedDeviceCount"), count($this->getDeviceInstances()));
+
 	}
 
 	public function RequestAction($Ident, $Value) {
@@ -208,5 +219,12 @@ class ArchiveManager extends IPSModule {
 		}
 
 		return $allModulesSorted;
+	}
+	
+	protected function getDeviceInstances() {
+		
+		$allDeviceInstances = IPS_GetInstanceListByModuleID($this->ReadPropertyString("ModuleGUID"));
+		
+		return $allDeviceInstances;
 	}
 }
