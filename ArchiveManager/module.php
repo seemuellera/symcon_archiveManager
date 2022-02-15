@@ -178,6 +178,7 @@ class ArchiveManager extends IPSModule {
 		
 		SetValue($this->GetIDForIdent("ManagedDeviceCount"), count($this->getDeviceInstances()));
 		SetValue($this->GetIDForIdent("ManagedVariableCount"), $this->countManagedVariables());
+		SetValue($this->GetIDForIdent("CompliantVariableCount"), $this->CheckCompliance());
 	}
 
 	public function RequestAction($Ident, $Value) {
@@ -268,7 +269,18 @@ class ArchiveManager extends IPSModule {
 			
 			if ($currentDefinition['VariableIdent'] == $Ident) {
 				
-				return $currentDefinition;
+				$archiveDefinition = Array();
+				$archiveDefinition['status'] = true;
+				$archiveDefinition['visibleWF'] = $currentDefinition['DisplayWF'];
+				if ($currentDefinition['AggregationType'] == 'Standard') {
+				
+					$archiveDefinition['aggregationType'] = 0;	
+				}
+				if ($currentDefinition['AggregationType'] == 'Counter') {
+				
+					$archiveDefinition['aggregationType'] = 1;	
+				}
+				$archiveDefinition['ignoreNull'] = $currentDefinition['IgnoreNull'];
 			}
 		}
 		
@@ -309,6 +321,43 @@ class ArchiveManager extends IPSModule {
 		return $variableCount;
 	}
 	
+	protected function getVariableArchiveSettings($variableId) {
+		
+		$archiveSettings = Array();
+		
+		$loggingStatus = AC_GetLoggingStatus($this->ReadPropertyInteger("ArchiveId"), $variableId);
+		
+		if (! $loggingStatus) {
+			
+			$archiveSettings['status'] = false;
+			$archiveSettings['visibleWF'] = false;
+			$archiveSettings['aggregationType'] = false;
+			$archiveSettings['ignoreNull'] = false;
+			
+			return $archiveSettings;
+		}
+		
+		$archiveSettings['status'] = true;
+		
+		$visibleWF = AC_GetGraphStatus($this->ReadPropertyInteger("ArchiveId"), $variableId);
+		$archiveSettings['visibleWF'] = $visibleWF;
+		
+		$aggregationType = AC_GetAggregationType($this->ReadPropertyInteger("ArchiveId"), $variableId);
+		$archiveSettings['aggregationType'] = $aggregationType;
+		
+		if ($aggregationType == 0) {
+			
+			$archiveSettings['ignoreNull'] = false;
+		}
+		else {
+			
+			$ignoreNull = AC_GetCounterIgnoreZeros($this->ReadPropertyInteger("ArchiveId"), $variableId);
+			$archiveSettings['ignoreNull'] = $ignoreNull;
+		}
+		
+		return $archiveSettings;
+	}
+	
 	public function CheckCompliance() {
 		
 		$variableCount = 0;
@@ -327,8 +376,31 @@ class ArchiveManager extends IPSModule {
 			
 			foreach ($allVariablesForCurrentIdent as $currentVariable) {
 				
-				
+				$archiveSettings = $this->getVariableArchiveSettings($currentVariable);
+				if ($this->compareArchiveSettings($archiveDefinition, $archiveSettings) ) {
+					
+					$variableCount++;
+				}
+				else {
+					
+					$this->LogMessage("Variable $currentVariable is not compliant", "DEBUG");
+				}
 			}
 		}
+		
+		return $variableCount;
+	}
+	
+	protected function compareArchiveSettings($archiveDefinition, $archiveSettings) {
+		
+		$result = array_diff($archiveDefinition, $archiveSettings);
+		
+		if (count($result) != 0) {
+			
+			var_dump($result);
+			return false;
+		}
+		
+		return true;
 	}
 }
