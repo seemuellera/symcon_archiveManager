@@ -23,6 +23,7 @@ class ArchiveManager extends IPSModule {
 		$this->RegisterPropertyInteger("RefreshInterval",0);
 		$this->RegisterPropertyBoolean("DebugOutput",false);
 		$this->RegisterPropertyInteger("ArchiveId",0);
+		$this->RegisterPropertyString("ModuleGUID","");
 		
 		// Variables
 		$this->RegisterVariableBoolean("Status","Status","~Switch");
@@ -76,7 +77,12 @@ class ArchiveManager extends IPSModule {
 								"caption" => "Global Settings",
 								"expanded" => true,
 								"items" => Array(
-										Array("type" => "SelectModule", "name" => "ArchiveId", "caption" => "Select Archive instance", "moduleID" => "{43192F0B-135B-4CE7-A0A7-1475603F3060}")
+										Array("type" => "SelectModule", "name" => "ArchiveId", "caption" => "Select Archive instance", "moduleID" => "{43192F0B-135B-4CE7-A0A7-1475603F3060}"),
+										Array(
+											"type" => "Select", 
+											"name" => "ModuleGUID", 
+											"caption" => "Device Module",
+											"options" => $this->getModuleList()
 									)
 								);
 		
@@ -131,4 +137,22 @@ class ArchiveManager extends IPSModule {
 		$this->LogMessage("$TimeStamp - $SenderId - $Message - " . implode(";",$Data), "DEBUG");
 	}
 
+	protected function getModuleList() {
+		
+		$allModuleGUIDs = IPS_GetModuleListByType(3);
+		
+		$allModules = Array();
+		
+		foreach ($allModuleGUIDs as $currentGUID) {
+			
+			$moduleDetails = IPS_GetModule($currentGUID);
+			$allModules[]['caption'] = $moduleDetails['ModuleName'];
+			$allModules[]['value'] = $currentGUID;
+		}
+		
+		$moduleNames = array_column($allModules, 'caption');
+		array_multisort($moduleNames, SORT_ASC, $allModules);
+		
+		return $allModules;
+	}
 }
