@@ -25,6 +25,7 @@ class ArchiveManager extends IPSModule {
 		$this->RegisterPropertyInteger("ArchiveId",0);
 		$this->RegisterPropertyString("ModuleGUID","");
 		$this->RegisterPropertyString("VariableList","");
+		$this->RegisterPropertyInteger("RemediationInterval",0);
 		
 		// Variables
 		$this->RegisterVariableBoolean("Status","Status","~Switch");
@@ -51,6 +52,9 @@ class ArchiveManager extends IPSModule {
 
 		$newInterval = $this->ReadPropertyInteger("RefreshInterval") * 1000;
 		$this->SetTimerInterval("RefreshInformation", $newInterval);
+		
+		$newRemediationInterval = $this->ReadPropertyInteger("RemediationInterval") * 1000;
+		$this->SetTimerInterval("RemediationInterval", $newRemediationInterval);
 		
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
@@ -87,7 +91,8 @@ class ArchiveManager extends IPSModule {
 											"name" => "ModuleGUID", 
 											"caption" => "Device Module",
 											"options" => $this->getModuleList()
-										)
+										),
+										Array("type" => "NumberSpinner", "name" => "RemediationInterval", "caption" => "Remediation Interval")
 									)
 								);
 								
