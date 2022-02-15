@@ -30,6 +30,7 @@ class ArchiveManager extends IPSModule {
 		$this->RegisterVariableBoolean("Status","Status","~Switch");
 		$this->RegisterVariableInteger("ManagedDeviceCount","Number of Managed Device Instances");
 		$this->RegisterVariableInteger("ManagedVariableCount","Number of Managed Variables");
+		$this->RegisterVariableInteger("CompliantVariableCount","Number of Compliant Variables");
 		
 		// Default Actions
 		$this->EnableAction("Status");
@@ -244,8 +245,7 @@ class ArchiveManager extends IPSModule {
 			
 			if ($variableId) {
 				
-				$variableDetails = IPS_GetVariable($variableId);
-				$allManagedVariables[] = $variableDetails;
+				$allManagedVariables[] = $variableId;
 			}
 		}
 		
@@ -307,5 +307,28 @@ class ArchiveManager extends IPSModule {
 		}
 		
 		return $variableCount;
+	}
+	
+	public function CheckCompliance() {
+		
+		$variableCount = 0;
+		
+		$allVariableIdents = $this->getArchiveDefinitionIdents();
+		
+		if (! $allVariableIdents) {
+			
+			return 0;
+		}
+		
+		foreach ($allVariableIdents as $currentIdent) {
+			
+			$archiveDefinition = getArchiveDefinitionForIdent($currentIdent);
+			$allVariablesForCurrentIdent = $this->getManagedVariables($currentIdent);
+			
+			foreach ($allVariablesForCurrentIdent as $currentVariable) {
+				
+				
+			}
+		}
 	}
 }
