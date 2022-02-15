@@ -380,11 +380,23 @@ class ArchiveManager extends IPSModule {
 	
 	protected function compareArchiveSettings($archiveDefinition, $archiveSettings) {
 		
-		$result = array_diff($archiveDefinition, $archiveSettings);
-		
-		if (count($result) != 0) {
+		if ($archiveDefinition['status'] != $archiveSettings['status']) {
 			
-			$this->LogMessage("The archvie definition and settings are different for this variable",KL_DEBUG);
+			return false;
+		}
+		
+		if ($archiveDefinition['visibleWF'] != $archiveSettings['visibleWF']) {
+			
+			return false;
+		}
+		
+		if ($archiveDefinition['aggregationType'] != $archiveSettings['aggregationType']) {
+			
+			return false;
+		}
+		
+		if ($archiveDefinition['ignoreNull'] != $archiveSettings['ignoreNull']) {
+			
 			return false;
 		}
 		
