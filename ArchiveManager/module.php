@@ -57,6 +57,8 @@ class ArchiveManager extends IPSModule {
 		$newRemediationInterval = $this->ReadPropertyInteger("RemediationInterval") * 1000;
 		$this->SetTimerInterval("Remediate", $newRemediationInterval);
 		
+		$this->RegisterReference($this->ReadPropertyInteger("ArchiveId"));
+		
 		// Diese Zeile nicht löschen
 		parent::ApplyChanges();
 	}
