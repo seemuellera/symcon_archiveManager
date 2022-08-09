@@ -10,6 +10,22 @@ class ArchiveManager extends IPSModule {
 		parent::__construct($InstanceID);
 
 		// Selbsterstellter Code
+		$this->retentionPoliciesDirect = Array(
+			0 => "one value per minute",
+			1 => "one value per 5 minutes",
+			2 => "one value per hour"
+		);
+
+		$this->retentionPoliciesHistorical = Array(
+			0 => "one value per minute",
+			1 => "one value per 5 minutes",
+			2 => "one value per hour",
+			3 => "one value per day",
+			4 => "one value per week",
+			5 => "one value per month",
+			6 => "one value per year",
+			7 => "delete values"
+		);
 	}
 
 	// Überschreibt die interne IPS_Create($id) Funktion
