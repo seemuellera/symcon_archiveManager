@@ -11,20 +11,22 @@ class ArchiveManager extends IPSModule {
 
 		// Selbsterstellter Code
 		$this->retentionPoliciesDirect = Array(
-			0 => "one value per minute",
-			1 => "one value per 5 minutes",
-			2 => "one value per hour"
+			Array('caption' => "none", 'value' => -1),
+			Array('caption' => "one value per minute", 'value' => 0),
+			Array('caption' => "one value per 5 minutes", 'value' => 1),
+			Array('caption' => "one value per hour", 'value' => 2)
 		);
 
 		$this->retentionPoliciesHistorical = Array(
-			0 => "one value per minute",
-			1 => "one value per 5 minutes",
-			2 => "one value per hour",
-			3 => "one value per day",
-			4 => "one value per week",
-			5 => "one value per month",
-			6 => "one value per year",
-			7 => "delete values"
+			Array('caption' => "none", 'value' => -1),
+			Array('caption' => "one value per minute", 'value' => 0),
+			Array('caption' => "one value per 5 minutes", 'value' => 1),
+			Array('caption' => "one value per hour", 'value' => 2),
+			Array('caption' => "one value per day", 'value' => 3),
+			Array('caption' => "one value per week", 'value' => 4),
+			Array('caption' => "one value per month", 'value' => 5),
+			Array('caption' => "one value per year", 'value' => 6),
+			Array('caption' => "delete values", 'value' => 7)
 		);
 	}
 
@@ -148,6 +150,36 @@ class ArchiveManager extends IPSModule {
 				"width" => "150px",
 				"edit" => Array("type" => "CheckBox"),
 				"add" => false
+			),
+			Array(
+				"caption" => "Thinning Direct",
+				"name" => "ThinningDirect",
+				"width" => "150px",
+				"edit" => Array(
+					"type" => "Select",
+					"options" => $this->retentionPoliciesDirect
+				),
+				"add" => -1
+			),
+			Array(
+				"caption" => "Thinning after 1 month",
+				"name" => "Thinning1Month",
+				"width" => "150px",
+				"edit" => Array(
+					"type" => "Select",
+					"options" => $this->retentionPoliciesHistorical
+				),
+				"add" => -1
+			),	
+			Array(
+				"caption" => "Thinning after 6 months",
+				"name" => "Thinning6Months",
+				"width" => "150px",
+				"edit" => Array(
+					"type" => "Select",
+					"options" => $this->retentionPoliciesHistorical
+				),
+				"add" => -1
 			)
 		);
 		$form['elements'][] = Array(
