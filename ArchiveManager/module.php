@@ -363,12 +363,23 @@ class ArchiveManager extends IPSModule {
 			
 			if ($currentDefinition['VariableIdent'] == $Ident) {
 				
-				if ($currentDefinition['RegexMatch']) {
+				// Migration code, because adding that attribute late does not
+				// populat it on existing objects, even with a default value set
+				// it seems that IPS has no migration logic here
+				if (array_key_exists('RegexMatch', $currentDefinition)) {
+				
+					if ($currentDefinition['RegexMatch']) {
 
-					return true;
+						return true;
+					}
+					else {
+
+						return false;
+					}
 				}
 				else {
 
+					// return false if no array key exists, as this was the default logic before introducing the regex feature
 					return false;
 				}
 			}
