@@ -282,14 +282,36 @@ class ArchiveManager extends IPSModule {
 		
 		$allDeviceInstances = $this->getDeviceInstances();
 		$allManagedVariables = Array();
+
+		$regexMatch = $this->getRegexMatch($Ident);
 		
 		foreach ($allDeviceInstances as $currentDevice) {
 			
-			$variableId = @IPS_GetObjectIDByIdent($Ident, $currentDevice);
-			
-			if ($variableId) {
+			if (! $regexMatch) {
+
+				// Exact match mode
+				$variableId = @IPS_GetObjectIDByIdent($Ident, $currentDevice);
 				
-				$allManagedVariables[] = $variableId;
+				if ($variableId) {
+					
+					$allManagedVariables[] = $variableId;
+				}
+			}
+			else {
+
+				// Regex Match mode
+				$allInstanceVariables = IPS_GetChildrenIDs($currentDevice);
+
+				foreach ($allInstanceVariables as $currentInstanceVariable) {
+
+					$objectDetails = IPS_GetObject($currentInstanceVariable);
+					preg_match('/' . $Ident . '/', $objectDetails['ObjectIdent'], $matches);
+
+					if (count($matches) > 0) {
+
+						$allManagedVariables[] = $currentInstanceVariable;
+					}
+				}
 			}
 		}
 		
@@ -332,6 +354,28 @@ class ArchiveManager extends IPSModule {
 		// No ident found, returning false
 		return false;
 	}
+
+	protected function getRegexMatch($Ident) {
+
+		$variableDefinitions = $this->getArchiveDefinition();
+
+		foreach ($variableDefinitions as $currentDefinition) {
+			
+			if ($currentDefinition['VariableIdent'] == $Ident) {
+				
+				if ($currentDefinition['RegexMatch']) {
+
+					return true;
+				}
+				else {
+
+					return false;
+				}
+			}
+		}
+
+		return false;
+	}
 	
 	protected function getArchiveDefinitionIdents() {
 		
@@ -358,7 +402,7 @@ class ArchiveManager extends IPSModule {
 		}
 		
 		foreach ($allVariableIdents as $currentIdent) {
-			
+
 			$allVariablesForCurrentIdent = $this->getManagedVariables($currentIdent);
 			$variableCount += count($allVariablesForCurrentIdent);
 		}
