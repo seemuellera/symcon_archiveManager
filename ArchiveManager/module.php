@@ -125,6 +125,13 @@ class ArchiveManager extends IPSModule {
 				"add" => "unnamed"
 			),
 			Array(
+				"caption" => "Regex Match",
+				"name" => "RegexMatch",
+				"width" => "100px",
+				"edit" => Array("type" => "CheckBox"),
+				"add" => false
+			),
+			Array(
 				"caption" => "Display in Webfront",
 				"name" => "DisplayWF",
 				"width" => "100px",
